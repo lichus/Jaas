@@ -1,0 +1,5 @@
+com\rainyday\server\login\JAASLoginModule.class
+com\rainyday\server\login\JAASUserPrincipal.class
+com\rainyday\server\login\JAASRolePrincipal.class
+com\rainyday\server\login\JAASPasswordPrincipal.class
+com\rainyday\server\login\JAASCallbackHandler.class
