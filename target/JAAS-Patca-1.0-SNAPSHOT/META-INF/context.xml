@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Context antiJARLocking="true" path="/jaas">
-  <Realm appName="rainyDay" className="org.apache.catalina.realm.JAASRealm" userClassNames="com.rainyday.server.login.JASSUserPrincipal"/>
+  <Realm className="org.apache.catalina.realm.JAASRealm"
+ appName="rainyDay"
+ userClassNames="com.rainyday.server.login.JASSUserPrincipal,com.rainyday.server.login.JAASPasswordPrincipal"
+ roleClassNames="com.rainyday.server.login.JASSRolePrincipal"/>
 </Context>

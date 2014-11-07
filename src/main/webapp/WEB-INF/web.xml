@@ -8,7 +8,7 @@
     <display-name>Tomcat JAAS example</display-name>
     
     <welcome-file-list>
-        <welcome-file>login.html</welcome-file>
+        <welcome-file>admin.jsp</welcome-file>
     </welcome-file-list>    
 
     <login-config>
@@ -33,21 +33,4 @@
             <role-name>*</role-name>
         </auth-constraint>
     </security-constraint>
-    <servlet>
-		<servlet-name>Log4JTestServlet</servlet-name>
-		<servlet-class>test.Log4JTestServlet</servlet-class>
-	</servlet>
-	<servlet>
-		<servlet-name>Log4JInitServlet</servlet-name>
-		<servlet-class>test.Log4JInitServlet</servlet-class>
-		<init-param>
-			<param-name>log4j-properties-location</param-name>
-			<param-value>WEB-INF/log4j.properties</param-value>
-		</init-param>
-		<load-on-startup>1</load-on-startup>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>Log4JTestServlet</servlet-name>
-		<url-pattern>/test</url-pattern>
-	</servlet-mapping>
 </web-app>

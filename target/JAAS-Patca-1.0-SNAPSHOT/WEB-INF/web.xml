@@ -8,7 +8,7 @@
     <display-name>Tomcat JAAS example</display-name>
     
     <welcome-file-list>
-        <welcome-file>login.html</welcome-file>
+        <welcome-file>admin.jsp</welcome-file>
     </welcome-file-list>    
 
     <login-config>

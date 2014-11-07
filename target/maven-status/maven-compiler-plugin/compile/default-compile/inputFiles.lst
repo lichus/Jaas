@@ -1,5 +1,4 @@
-C:\Users\klichorad@sygnity.pl\Documents\NetBeansProjects\JAAS-Patca\src\main\java\com\rainyday\server\login\JAASPasswordPrincipal.java
-C:\Users\klichorad@sygnity.pl\Documents\NetBeansProjects\JAAS-Patca\src\main\java\com\rainyday\server\login\JAASUserPrincipal.java
-C:\Users\klichorad@sygnity.pl\Documents\NetBeansProjects\JAAS-Patca\src\main\java\com\rainyday\server\login\JAASLoginModule.java
-C:\Users\klichorad@sygnity.pl\Documents\NetBeansProjects\JAAS-Patca\src\main\java\com\rainyday\server\login\JAASRolePrincipal.java
-C:\Users\klichorad@sygnity.pl\Documents\NetBeansProjects\JAAS-Patca\src\main\java\com\rainyday\server\login\JAASCallbackHandler.java
+C:\Users\klichorad@sygnity.pl\Documents\GitHub\JAAS\Jaas\src\main\java\com\rainyday\server\login\JAASUserPrincipal.java
+C:\Users\klichorad@sygnity.pl\Documents\GitHub\JAAS\Jaas\src\main\java\com\rainyday\server\login\JAASPasswordPrincipal.java
+C:\Users\klichorad@sygnity.pl\Documents\GitHub\JAAS\Jaas\src\main\java\com\rainyday\server\login\JAASLoginModule.java
+C:\Users\klichorad@sygnity.pl\Documents\GitHub\JAAS\Jaas\src\main\java\com\rainyday\server\login\JAASRolePrincipal.java

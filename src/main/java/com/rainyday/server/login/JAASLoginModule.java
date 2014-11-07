@@ -18,8 +18,14 @@ import javax.security.auth.callback.PasswordCallback;
 import javax.security.auth.callback.UnsupportedCallbackException;
 import javax.security.auth.login.LoginException;
 import javax.security.auth.spi.LoginModule;
+import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.FileAppender;
+import org.apache.log4j.Level;
 
 import org.apache.log4j.Logger;
+import org.apache.log4j.PatternLayout;
+import org.apache.log4j.RollingFileAppender;
+import sun.security.provider.MD5;
 
 /**
  * @author semika
@@ -60,7 +66,19 @@ public class JAASLoginModule implements LoginModule {
         this.callbackHandler = callbackHandler;
         this.sharedState = sharedState;
         this.options = options;
-  
+         
+        BasicConfigurator.configure(); // basic log4j configuration
+        Logger.getRootLogger().setLevel(Level.INFO);
+        FileAppender fileAppender = null;
+        try {
+            fileAppender
+                    = new RollingFileAppender(new PatternLayout("%d{dd-MM-yyyy HH:mm:ss} %C %L %-5p:%m%n"), "file.log");
+            LOGGER.addAppender(fileAppender);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        LOGGER.info("TEST LOG ENTRY");
         debug = "true".equalsIgnoreCase((String)options.get("debug")); 
     }
 
@@ -80,14 +98,14 @@ public class JAASLoginModule implements LoginModule {
             callbackHandler.handle(callbacks);
             username = ((NameCallback)callbacks[0]).getName();
             password = ((PasswordCallback)callbacks[1]).getPassword();
-   
+
             if (debug) {
-                LOGGER.debug("Username :" + username);
-                LOGGER.debug("Password : " + password);
+                LOGGER.info("Username :" + username);
+                LOGGER.info("Password : " + password);
             }
    
             if (username == null || password == null) {
-                LOGGER.error("Callback handler does not return login data properly");
+                LOGGER.info("Callback handler does not return login data properly");
                 throw new LoginException("Callback handler does not return login data properly"); 
             }
    
@@ -113,27 +131,27 @@ public class JAASLoginModule implements LoginModule {
             userPrincipal = new JAASUserPrincipal(username);
             if (!subject.getPrincipals().contains(userPrincipal)) {
                 subject.getPrincipals().add(userPrincipal);
-                LOGGER.debug("User principal added:" + userPrincipal);
+                LOGGER.info("User principal added:" + userPrincipal);
             }
             passwordPrincipal = new JAASPasswordPrincipal(new String(password)); 
             if (!subject.getPrincipals().contains(passwordPrincipal)) {
                 subject.getPrincipals().add(passwordPrincipal);
-                LOGGER.debug("Password principal added: " + passwordPrincipal);
+                LOGGER.info("Password principal added: " + passwordPrincipal);
             }
       
             //populate subject with roles.
-            List<String> roles = getRoles();
-            for (String role: roles) {
-                JAASRolePrincipal rolePrincipal = new JAASRolePrincipal(role);
-                if (!subject.getPrincipals().contains(rolePrincipal)) {
-                    subject.getPrincipals().add(rolePrincipal); 
-                    LOGGER.debug("Role principal added: " + rolePrincipal);
-                }
-            }
+//            List<String> roles = getRoles();
+//            for (String role: roles) {
+//                JAASRolePrincipal rolePrincipal = new JAASRolePrincipal(role);
+//                if (!subject.getPrincipals().contains(rolePrincipal)) {
+//                    subject.getPrincipals().add(rolePrincipal); 
+//                    LOGGER.info("Role principal added: " + rolePrincipal);
+//                }
+//            }
       
             commitSucceeded = true;
       
-            LOGGER.info("Login subject were successfully populated with principals and roles"); 
+            LOGGER.info("Login subject were successfully populated with principals"); 
       
             return true;
        }
@@ -181,33 +199,41 @@ public class JAASLoginModule implements LoginModule {
   
       try {
           con = getConnection();
-          stmt = con.prepareStatement(sql);
+          stmt = con.prepareStatement("SELECT * FROM  PATCA.USER1 where LOGIN=?");
           stmt.setString(1, username);
-          stmt.setString(2, new String(password));
+         // final MD5 md = MD5.getInstance();
+       //   String encryptepPassword = mDigestUtils.md5Hex(password);
+          //stmt.setString(2, new String(password));
    
           rs = stmt.executeQuery();
-   
-          if (rs.next()) { //User exist with the given user name and password.
-              return true;
+
+//          String strPassword = "";
+//          for (int x = 0; x < password.length; x++) {
+//              strPassword = strPassword + password[x];
+//          }
+         if (rs.next()) { //User exist with the given user name and password.
+       //   if("admin".equals(username) && "pass123".equals(strPassword))
+            return true;
           }
+
        } catch (Exception e) {
-           LOGGER.error("Error when loading user from the database " + e);
+           LOGGER.info("Error when loading user from the database " + e);
            e.printStackTrace();
        } finally {
            try {
                rs.close();
            } catch (SQLException e) {
-               LOGGER.error("Error when closing result set." + e);
+               LOGGER.info("Error when closing result set." + e);
            }
            try {
                stmt.close();
            } catch (SQLException e) {
-               LOGGER.error("Error when closing statement." + e);
+               LOGGER.info("Error when closing statement." + e);
            }
            try {
                con.close();
            } catch (SQLException e) {
-               LOGGER.error("Error when closing connection." + e);
+               LOGGER.info("Error when closing connection." + e);
            }
        }
        return false;
@@ -237,23 +263,23 @@ public class JAASLoginModule implements LoginModule {
               roleList.add(rs.getString("rolename")); 
           }
       } catch (Exception e) {
-          LOGGER.error("Error when loading user from the database " + e);
+          LOGGER.info("Error when loading user from the database " + e);
           e.printStackTrace();
       } finally {
            try {
                rs.close();
            } catch (SQLException e) {
-               LOGGER.error("Error when closing result set." + e);
+               LOGGER.info("Error when closing result set." + e);
            }
            try {
                stmt.close();
            } catch (SQLException e) {
-               LOGGER.error("Error when closing statement." + e);
+               LOGGER.info("Error when closing statement." + e);
            }
            try {
                con.close();
            } catch (SQLException e) {
-               LOGGER.error("Error when closing connection." + e);
+               LOGGER.info("Error when closing connection." + e);
            }
        }
        return roleList;
@@ -266,19 +292,19 @@ public class JAASLoginModule implements LoginModule {
   */
   private Connection getConnection() throws LoginException {
   
-      String dBUser = (String)options.get("dbUser");
-      String dBPassword = (String)options.get("dbPassword");
-      String dBUrl = (String)options.get("dbURL");
-      String dBDriver = (String)options.get("dbDriver");
+      String jdbcUser = (String)options.get("jdbcUser");
+      String jdbcPassword = (String)options.get("jdbcPassword");
+      String jdbcUrl = (String)options.get("jdbcUrl");
+      String jdbcDriver = (String)options.get("jdbcDriver");
 
       Connection con = null;
       try {
          //loading driver
-         Class.forName (dBDriver).newInstance();
-         con = DriverManager.getConnection (dBUrl, dBUser, dBPassword);
+         Class.forName(jdbcDriver).newInstance();
+         con = DriverManager.getConnection (jdbcUrl, jdbcUser, jdbcPassword);
       } 
       catch (Exception e) {
-         LOGGER.error("Error when creating database connection" + e);
+         LOGGER.info("Error when creating database connection" + e);
          e.printStackTrace();
       } finally {
       }
